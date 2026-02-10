@@ -149,6 +149,63 @@
         .ia { background: #00b4d8; } .eb { background: #d62828; } .iy { background: #5a189a; } .is { background: #fb8500; }
 
         @media (max-width: 1100px) { .main-content { grid-template-columns: 1fr; } }
+        
+        /* --- ERDAL GIF CARD (ÇAY DÖKÜLME ANİMASYONU) --- */
+        .erdal-gif-card {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 240px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.45));
+            backdrop-filter: blur(6px) saturate(120%);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 2000;
+            animation: erdalFloat 6s ease-in-out infinite;
+        }
+        .erdal-gif-card img { width: 100%; height: auto; border-radius: 8px; display:block; }
+        .erdal-gif-title {
+            font-family: 'Bangers', cursive;
+            color: #fff;
+            font-size: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.7);
+        }
+        .erdal-gif-sub {
+            font-family: 'Inter', sans-serif;
+            color: #f1f1f1;
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.95;
+            line-height: 1.05;
+        }
+        .erdal-gif-close {
+            position: absolute;
+            top: 6px; right: 8px;
+            background: transparent; border: none; color: #fff;
+            font-size: 18px; cursor: pointer; opacity: 0.85;
+        }
+        .erdal-gif-close:hover { opacity: 1; }
+
+        @keyframes erdalFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .erdal-gif-card { right: 12px; left: 12px; width: auto; bottom: 12px; padding: 8px; }
+            .erdal-gif-title { font-size: 14px; }
+            .erdal-gif-sub { font-size: 11px; }
+        }
     </style>
 </head>
 <body>
@@ -157,7 +214,10 @@
     <div class="leynun-logo">LEYNUN</div>
     <div class="erdal-ads">
         <img src="erdalbakkal.png" alt="Erdal Bakkal">
-        <span>Çay Erdal bakkalda içilir, <br><small>Reklam değil ha çok güzel çay yapıyor!</small></span>
+        <div class="erdal-text">
+            Çay Erdal bakkalda içilir,
+            <small>Reklam değil ha çok güzel çay yapıyor!</small>
+        </div>
     </div>
 </nav>
 
@@ -216,6 +276,18 @@
                 <div class="avatar iy">Y</div>
                 <div class="comment-text"><b>Yavuz (Hırsız Değil)</b><p>Teyip mi?</p></div>
             </div>
+            <div class="comment-item">
+                <div class="avatar iy">Y</div>
+                <div class="comment-text"><b>Yavuz (Hırsız Değil)</b><p>Arabada mı?</p></div>
+            </div>
+            <div class="comment-item">
+                <div class="avatar eb">EB</div>
+                <div class="comment-text"><b>Erdal Bakkal</b><p>İskender çalacak bu hırsız teyibini aman diyim bak ha</p></div>
+            </div>
+            <div class="comment-item">
+                <div class="avatar iy">Y</div>
+                <div class="comment-text"><b>Yavuz (Hırsız Değil)</b><p>Aşk olsun ben öyle bir insan mıyım?</p></div>
+            </div>
         </div>
     </section>
 
@@ -232,6 +304,7 @@
         <div style="background:var(--bg-card); padding:20px; border-radius:15px; border:2px solid var(--lm-red); margin-top:20px;">
             <h3 style="color:var(--lm-yellow); margin-top:0; font-family:Bangers;">GÜNCELLEMELER</h3>
             <p style="font-size:13px; color:#aaa;"><b>Dede'nin asasına haciz konmuştur</b> artık kafamızı yaramayacak</p>
+            <p style="font-size:13px; color:#aaa;"><b>Erdal Bakkal'da veresiye devri sonlanmıştır!</b></p>
         </div>
     </aside>
 </div>
@@ -340,6 +413,24 @@
 </script>
 
 </body>
-            </html>
-                                                       
+    <!-- ERDAL GIF CARD -->
+    <div class="erdal-gif-card" id="erdalGif">
+        <button id="erdalGifClose" class="erdal-gif-close" aria-label="Kapat">&times;</button>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExejU5dG5mOTZ2MGl1MjNpdHFsMXE0dG95NjlnbWQ0YXA4c2F2ZmFqMyZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/iIcjUP3MBs0Vje5GXy/giphy.gif" alt="Çay dökülme">
+        <div class="erdal-gif-title">ÇAY ERDAL BAKKAL'DA İÇİLİR</div>
+        <div class="erdal-gif-sub">ERDAL BAKKAL.. ERDAL BAKKAL... MAHALLENİZİN BAKKALI...</div>
+    </div>
 
+    <script>
+        // Close button for the Erdal GIF card
+        const egClose = document.getElementById('erdalGifClose');
+        if (egClose) {
+            egClose.addEventListener('click', () => {
+                const card = document.getElementById('erdalGif');
+                if (card) card.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
+                                                       

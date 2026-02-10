@@ -206,6 +206,41 @@
             .erdal-gif-title { font-size: 14px; }
             .erdal-gif-sub { font-size: 11px; }
         }
+        /* --- LOCAL PRE-ROLL AD OVERLAY --- */
+        .pre-ad-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 5000;
+            padding: 20px;
+        }
+        .pre-ad-box {
+            width: 760px;
+            max-width: 96vw;
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .pre-ad-video { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; overflow: hidden; }
+        .pre-ad-controls { display:flex; width:100%; justify-content:space-between; align-items:center; }
+        .pre-ad-skip {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .pre-ad-skip[disabled] { opacity: 0.5; cursor: default; }
     </style>
 </head>
 <body>
@@ -349,10 +384,10 @@
         document.getElementById('prevBtn').disabled = (index === 0);
         document.getElementById('nextBtn').disabled = (index === episodes.length - 1);
 
+        // Load main video but show pre-roll ad first. After ad ends or skipped, main video will start.
         video.load();
-        video.play();
-        document.getElementById('atPlayBtn').style.display = "none";
-        document.getElementById('playIcon').innerText = "pause";
+        adPlayed = false; // will trigger ad on play/load
+        showPreRollAd();
     }
 
     document.getElementById('nextBtn').onclick = () => { if(currentEp < episodes.length-1) loadEpisode(currentEp + 1); };
@@ -366,10 +401,17 @@
     const timeShow = document.getElementById('timeShow');
     const subMenu = document.getElementById('subMenu');
     const subBtn = document.getElementById('subBtn');
+    
+    // Pre-roll ad state
+    let adPlayed = false; // whether pre-roll already played for current episode
+    const AD_FILE = 'erdalbaggal.mp4'; // local ad filename placed in same folder
 
     function togglePlay() {
-        if (video.paused) { video.play(); atPlayBtn.style.display = "none"; playIcon.innerText = "pause"; }
-        else { video.pause(); atPlayBtn.style.display = "block"; playIcon.innerText = "play_arrow"; }
+        if (video.paused) {
+            // if pre-roll hasn't been shown yet, show it first
+            if (!adPlayed) { showPreRollAd(); return; }
+            video.play(); atPlayBtn.style.display = "none"; playIcon.innerText = "pause";
+        } else { video.pause(); atPlayBtn.style.display = "block"; playIcon.innerText = "play_arrow"; }
     }
 
     atPlayBtn.onclick = togglePlay;
@@ -431,6 +473,71 @@
             });
         }
     </script>
+        <!-- PRE-ROLL AD OVERLAY (LOCAL MP4) -->
+        <div class="pre-ad-overlay" id="preAdOverlay" aria-hidden="true">
+            <div class="pre-ad-box" role="dialog" aria-label="Reklam">
+                <div style="display:flex; width:100%; justify-content:space-between; align-items:center;">
+                    <div style="color:#ddd; font-weight:700;">Reklam</div>
+                    <button id="preAdSkip" class="pre-ad-skip" disabled>Atla in 5</button>
+                </div>
+                <div class="pre-ad-video">
+                    <video id="preAdVideo" src="erdalbaggal.mp4" playsinline></video>
+                </div>
+                <div style="font-size:12px; color:#bbb; width:100%; text-align:center;">Reklam bittiğinde bölüm otomatik açılacaktır.</div>
+            </div>
+        </div>
+
+        <script>
+            const preAdOverlay = document.getElementById('preAdOverlay');
+            const preAdVideo = document.getElementById('preAdVideo');
+            const preAdSkip = document.getElementById('preAdSkip');
+            let preAdSkipTimer = null;
+
+            function showPreRollAd() {
+                if (adPlayed) return; // already shown
+                adPlayed = true;
+                // show overlay
+                preAdOverlay.style.display = 'flex';
+                // hide main controls so there's no double-play
+                try { atPlayBtn.style.display = 'none'; } catch(e){}
+
+                // reset and play ad
+                try {
+                    preAdVideo.currentTime = 0;
+                    const playPromise = preAdVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(() => {
+                            // autoplay blocked: show a big click-to-play on overlay
+                            preAdVideo.setAttribute('controls', '');
+                        });
+                    }
+                } catch(e) { console.warn('Ad play error', e); }
+
+                // start skip countdown
+                let t = 5; preAdSkip.disabled = true; preAdSkip.innerText = 'Atla in ' + t;
+                if (preAdSkipTimer) clearInterval(preAdSkipTimer);
+                preAdSkipTimer = setInterval(() => {
+                    t -= 1;
+                    if (t <= 0) { clearInterval(preAdSkipTimer); preAdSkip.disabled = false; preAdSkip.innerText = 'Reklamı Geç'; }
+                    else preAdSkip.innerText = 'Atla in ' + t;
+                }, 1000);
+
+                preAdSkip.onclick = () => { if (!preAdSkip.disabled) endPreAd(true); };
+
+                // when ad ends naturally
+                preAdVideo.onended = () => endPreAd(false);
+            }
+
+            function endPreAd(skipped) {
+                // hide overlay
+                preAdOverlay.style.display = 'none';
+                if (preAdSkipTimer) { clearInterval(preAdSkipTimer); preAdSkipTimer = null; }
+                // stop and reset ad video
+                try { preAdVideo.pause(); preAdVideo.currentTime = 0; preAdVideo.removeAttribute('controls'); } catch(e){}
+                // start main video
+                try { video.play(); atPlayBtn.style.display = 'none'; playIcon.innerText = 'pause'; } catch(e) { console.warn(e); }
+            }
+        </script>
 </body>
 </html>
                                                        

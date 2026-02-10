@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LEYNUN - Atbaş Player</title>
+    <title>LEYNUN - Atbaş Player Pro</title>
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
         }
 
         body {
-            /* ARKA PLAN RESMİ */
             background: url('lm.png') no-repeat center center fixed;
             background-size: cover;
             color: #efeff1;
@@ -25,15 +24,15 @@
             margin: 0; padding: 0;
         }
 
-        /* Okunabilirlik katmanı */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             z-index: -1;
         }
 
+        /* --- HEADER --- */
         nav {
             height: 75px;
             background: rgba(0, 0, 0, 0.9);
@@ -75,9 +74,7 @@
             gap: 30px;
         }
 
-        @media (max-width: 1100px) { .main-content { grid-template-columns: 1fr; } }
-
-        /* PLAYER */
+        /* --- PLAYER --- */
         .atbas-header {
             background: var(--lm-red);
             color: white;
@@ -100,7 +97,6 @@
 
         video { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Altyazı Ayarları */
         video::cue {
             background: rgba(0, 0, 0, 0.8);
             color: #fff;
@@ -110,7 +106,7 @@
         .player-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -127,11 +123,40 @@
             color: var(--lm-yellow);
             cursor: pointer;
             z-index: 20;
+            text-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
+
+        /* ALTYAZI FRAME (MENU) */
+        .subtitle-menu {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--lm-yellow);
+            border-radius: 10px;
+            padding: 10px;
+            display: none; /* JS ile açılacak */
+            flex-direction: column;
+            gap: 5px;
+            min-width: 150px;
+            z-index: 100;
+        }
+        .sub-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.2s;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sub-option:hover { background: var(--lm-red); }
+        .sub-option.active { color: var(--lm-yellow); font-weight: bold; }
 
         .controls-bar {
             padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            background: linear-gradient(transparent, rgba(0,0,0,0.95));
         }
 
         .progress-container {
@@ -139,9 +164,12 @@
             background: rgba(255,255,255,0.2);
             border-radius: 4px; margin-bottom: 15px; cursor: pointer;
         }
-        .progress-fill { height: 100%; background: var(--lm-yellow); width: 0%; border-radius: 4px; }
+        .progress-fill { height: 100%; background: var(--lm-yellow); width: 0%; border-radius: 4px; position: relative; }
 
-        /* YORUMLAR */
+        .ui-icon { cursor: pointer; transition: 0.2s; }
+        .ui-icon:hover { color: var(--lm-yellow); transform: scale(1.1); }
+
+        /* --- YORUMLAR --- */
         .comment-section {
             margin-top: 30px;
             background: var(--bg-card);
@@ -152,10 +180,10 @@
         .comment-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .avatar { width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid #fff; }
         
-        /* Renkler */
         .ia { background: #00b4d8; } .eb { background: #d62828; } .iy { background: #5a189a; } 
         .is { background: #fb8500; } .ct { background: #ff4d6d; } .me { background: #6c757d; }
-        .ar { background: #2a9d8f; } .ab { background: #023e8a; }
+
+        @media (max-width: 1100px) { .main-content { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -170,7 +198,7 @@
 
 <div class="main-content">
     <section>
-        <div class="atbas-header">🐎 ATBAŞ-PLAYER PRO</div>
+        <div class="atbas-header">🐎 ATBAŞ-PLAYER PRO v3.0</div>
         <div class="player-wrapper" id="pWrapper">
             <video id="mainVideo">
                 <source src="https://www.dropbox.com/scl/fi/f2gckj27atnby9hpi7lws/Leyla-ile-Mecnun-12.-B-l-m-1080P_HD.mp4?rlkey=pt780xg75q24m3qzgutvs8pfr&st=a96jylod&raw=1" type="video/mp4">
@@ -180,18 +208,24 @@
             <i class="material-icons-round at-play-btn" id="atPlayBtn">pest_control_rodent</i>
 
             <div class="player-overlay">
+                <div class="subtitle-menu" id="subMenu">
+                    <div style="font-size: 12px; color: #888; margin-bottom: 8px; padding-left: 12px;">ALTYAZI AYARLARI</div>
+                    <div class="sub-option" id="subOff">Kapat <i class="material-icons-round" style="font-size:14px">close</i></div>
+                    <div class="sub-option active" id="subOn">Türkçe <i class="material-icons-round" style="font-size:14px">check</i></div>
+                </div>
+
                 <div class="controls-bar">
                     <div class="progress-container" id="pContainer">
                         <div class="progress-fill" id="pFill"></div>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="display:flex; align-items:center; gap:15px;">
-                            <i class="material-icons-round" id="playIcon" style="cursor:pointer; font-size:35px;">play_arrow</i>
-                            <span id="timeShow" style="font-family:monospace;">00:00 / 00:00</span>
+                            <i class="material-icons-round ui-icon" id="playIcon" style="font-size:35px;">play_arrow</i>
+                            <span id="timeShow" style="font-family:monospace; font-size:14px;">00:00 / 00:00</span>
                         </div>
-                        <div style="display:flex; gap:20px;">
-                            <i class="material-icons-round" id="subBtn" style="cursor:pointer;">subtitles</i>
-                            <i class="material-icons-round" id="fsBtn" style="cursor:pointer;">fullscreen</i>
+                        <div style="display:flex; gap:25px;">
+                            <i class="material-icons-round ui-icon" id="subBtn">subtitles</i>
+                            <i class="material-icons-round ui-icon" id="fsBtn">fullscreen</i>
                         </div>
                     </div>
                 </div>
@@ -199,47 +233,39 @@
         </div>
 
         <div class="comment-section">
-            <h2 style="font-family:'Bangers'; color:var(--lm-yellow); font-size:28px;">MAHALLE MECLİSİ (YORUMLAR)</h2>
+            <h2 style="font-family:'Bangers'; color:var(--lm-yellow); font-size:28px; margin-top:0;">MAHALLE MECLİSİ</h2>
             
             <div class="comment-item">
                 <div class="avatar ia">İA</div>
-                <div class="comment-text"><b>İsmail Abi</b><p>Genlerimde var benim, o gemi bir gün gelecek, bu altyazı da bugün çalışacak!</p></div>
+                <div class="comment-text"><b>İsmail Abi</b><p>Hooop! Çay Erdal Bakkal'da içilir, video LEYNUN'da izlenir kardeşim!</p></div>
             </div>
-            <div class="comment-item">
-                <div class="avatar eb">EB</div>
-                <div class="comment-text"><b>Erdal Bakkal</b><p>Bakkalımda altyazı bedava, çay 1 lira! İzlemeyenin dükkanına haciz gönderirim.</p></div>
-            </div>
+
             <div class="comment-item">
                 <div class="avatar is">İS</div>
-                <div class="comment-text"><b>İskender</b><p>Mecnuuun! Yine mi açamadın videoyu? Altyazı dosyasına bak evladım, klasörün içinde mi!</p></div>
+                <div class="comment-text"><b>İskender</b><p>Teyibi arabada unuttum umarım çalmazlar.</p></div>
             </div>
             <div class="comment-item">
                 <div class="avatar iy">Y</div>
-                <div class="comment-text"><b>Yavuz</b><p>Ben aslında yorum yazmıyorum, şu an sisteme sızıp performansı ölçüyorum. (Hırsız değilim)</p></div>
+                <div class="comment-text"><b>Yavuz (Hırsız Değil)</b><p>Teyip mi?</p></div>
             </div>
+
             <div class="comment-item">
-                <div class="avatar ct">CT</div>
-                <div class="comment-text"><b>Çiçekçi Teyze</b><p>Çiçeklerim var taze taze, videonun altına koymalık... Almaz mısın?</p></div>
+                <div class="avatar eb">EB</div>
+                <div class="comment-text"><b>Erdal Bakkal</b><p>Şu yukarıdaki Yavuz'u dükkana sokmayın, bardaklarım eksiliyor.</p></div>
             </div>
             <div class="comment-item">
                 <div class="avatar me">M</div>
-                <div class="comment-text"><b>Melül</b><p>.......... (Sadece bakıyor, başka bir şey yapmıyor)</p></div>
-            </div>
-            <div class="comment-item">
-                <div class="avatar ar">A</div>
-                <div class="comment-text"><b>Arda</b><p>Baba, altyazıyı VTT yaptık ama pazarlama stratejimiz hala eksik.</p></div>
-            </div>
-            <div class="comment-item">
-                <div class="avatar ab">AB</div>
-                <div class="comment-text"><b>Arda'nın Babası</b><p>Aferin Arda, altyazı yerel olsun, sermaye içeride kalsın oğlum.</p></div>
+                <div class="comment-text"><b>Melül</b><p>.......... (Ekrandaki ata bakıyor)</p></div>
             </div>
         </div>
     </section>
 
     <aside>
         <div style="background:var(--bg-card); padding:20px; border-radius:15px; border:2px solid var(--lm-red);">
-            <h3 style="color:var(--lm-yellow); margin-top:0;">KİREÇBURNU TV</h3>
-            <p style="font-size:13px;">Gemi beklemekten sıkılanlar için kesintisiz L&M keyfi.</p>
+            <h3 style="color:var(--lm-yellow); margin-top:0; font-family:Bangers;">KISAYOLLAR</h3>
+            <p style="font-size:13px; color:#aaa;"><b>Space:</b> Oynat/Durdur</p>
+            <p style="font-size:13px; color:#aaa;"><b>Sağ/Sol:</b> 5 Sn İleri/Geri</p>
+            <p style="font-size:13px; color:#aaa;"><b>F Tuşu:</b> Tam Ekran</p>
         </div>
     </aside>
 </div>
@@ -251,7 +277,10 @@
     const pFill = document.getElementById('pFill');
     const pContainer = document.getElementById('pContainer');
     const timeShow = document.getElementById('timeShow');
+    const subMenu = document.getElementById('subMenu');
+    const subBtn = document.getElementById('subBtn');
 
+    // 1. OYNAT / DURDUR
     function togglePlay() {
         if (video.paused) {
             video.play();
@@ -268,6 +297,22 @@
     playIcon.onclick = togglePlay;
     video.onclick = togglePlay;
 
+    // 2. PC KONTROLLERİ (SPACE, OKLAR, F)
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Space") {
+            e.preventDefault();
+            togglePlay();
+        } else if (e.code === "ArrowRight") {
+            video.currentTime += 5;
+        } else if (e.code === "ArrowLeft") {
+            video.currentTime -= 5;
+        } else if (e.code === "KeyF") {
+            e.preventDefault();
+            toggleFullscreen();
+        }
+    });
+
+    // 3. ZAMAN VE PROGRESS
     video.ontimeupdate = () => {
         const pc = (video.currentTime / video.duration) * 100;
         pFill.style.width = pc + '%';
@@ -279,15 +324,35 @@
         video.currentTime = ((e.clientX - rect.left) / rect.width) * video.duration;
     };
 
-    document.getElementById('subBtn').onclick = () => {
-        const track = video.textTracks[0];
-        track.mode = (track.mode === 'showing' ? 'disabled' : 'showing');
+    // 4. ALTYAZI FRAME KONTROLÜ
+    subBtn.onclick = (e) => {
+        e.stopPropagation();
+        subMenu.style.display = (subMenu.style.display === "flex") ? "none" : "flex";
     };
 
-    document.getElementById('fsBtn').onclick = () => {
+    document.getElementById('subOn').onclick = () => {
+        video.textTracks[0].mode = 'showing';
+        document.getElementById('subOn').classList.add('active');
+        document.getElementById('subOff').classList.remove('active');
+        subMenu.style.display = "none";
+    };
+
+    document.getElementById('subOff').onclick = () => {
+        video.textTracks[0].mode = 'disabled';
+        document.getElementById('subOff').classList.add('active');
+        document.getElementById('subOn').classList.remove('active');
+        subMenu.style.display = "none";
+    };
+
+    // Dışarı tıklayınca menüyü kapat
+    document.onclick = () => subMenu.style.display = "none";
+
+    // 5. TAM EKRAN
+    function toggleFullscreen() {
         if (!document.fullscreenElement) document.getElementById('pWrapper').requestFullscreen();
         else document.exitFullscreen();
-    };
+    }
+    document.getElementById('fsBtn').onclick = toggleFullscreen;
 
     function format(s) {
         if(isNaN(s)) return "00:00";

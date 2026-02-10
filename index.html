@@ -32,7 +32,6 @@
             z-index: -1;
         }
 
-        /* --- HEADER --- */
         nav {
             height: 75px;
             background: rgba(0, 0, 0, 0.9);
@@ -52,19 +51,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .erdal-ads {
-            background: #fdf0d5;
-            color: #333;
-            padding: 8px 15px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 800;
-            border: 3px dashed var(--lm-red);
-        }
-        .erdal-ads img { height: 45px; }
-
         .main-content {
             max-width: 1300px;
             margin: 30px auto;
@@ -74,7 +60,6 @@
             gap: 30px;
         }
 
-        /* --- PLAYER --- */
         .atbas-header {
             background: var(--lm-red);
             color: white;
@@ -100,97 +85,68 @@
         video::cue {
             background: transparent !important;
             color: #ffffff !important;
-            font-size: 28px !important; /* Boyutu buradan ayarla (32 çok büyükse 28 idealdir) */
+            font-size: 28px !important;
             font-weight: 900 !important;
-            font-family: 'Inter', sans-serif;
-            /* Yazının her yerde okunması için siyah dış hat */
-            text-shadow: 
-                2px 2px 0px #000, 
-                -2px -2px 0px #000, 
-                2px -2px 0px #000, 
-                -2px 2px 0px #000,
-                0px 0px 8px rgba(0,0,0,1) !important;
+            text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0px 0px 8px rgba(0,0,0,1) !important;
         }
 
-        .player-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
+        /* --- NAVIGASYON BUTONLARI --- */
+        .nav-controls {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            opacity: 0;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .nav-btn {
+            flex: 1;
+            background: var(--bg-card);
+            border: 2px solid var(--lm-red);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
             transition: 0.3s;
         }
-        .player-wrapper:hover .player-overlay { opacity: 1; }
+        .nav-btn:hover:not(:disabled) { background: var(--lm-red); }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        .at-play-btn {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 120px !important;
-            color: var(--lm-yellow);
-            cursor: pointer;
-            z-index: 20;
-            text-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
-
-        /* ALTYAZI FRAME (MENU) */
-        .subtitle-menu {
-            position: absolute;
-            bottom: 80px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid var(--lm-yellow);
-            border-radius: 10px;
-            padding: 10px;
-            display: none; /* JS ile açılacak */
-            flex-direction: column;
-            gap: 5px;
-            min-width: 150px;
-            z-index: 2147483647;
-        }
-        .sub-option {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.2s;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .sub-option:hover { background: var(--lm-red); }
-        .sub-option.active { color: var(--lm-yellow); font-weight: bold; }
-
-        .controls-bar {
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.95));
-        }
-
-        .progress-container {
-            width: 100%; height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px; margin-bottom: 15px; cursor: pointer;
-        }
-        .progress-fill { height: 100%; background: var(--lm-yellow); width: 0%; border-radius: 4px; position: relative; }
-
-        .ui-icon { cursor: pointer; transition: 0.2s; }
-        .ui-icon:hover { color: var(--lm-yellow); transform: scale(1.1); }
-
-        /* --- YORUMLAR --- */
-        .comment-section {
-            margin-top: 30px;
+        /* --- BÖLÜMLER PANELİ --- */
+        .episode-list {
             background: var(--bg-card);
-            border-radius: 20px;
-            padding: 30px;
-            border-left: 10px solid var(--lm-red);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid var(--lm-red);
         }
+        .ep-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ep-item:hover { background: rgba(230, 57, 70, 0.2); }
+        .ep-item.active { border-left: 5px solid var(--lm-yellow); background: rgba(255, 183, 3, 0.1); }
+
+        /* Eski Player Overlay ve Diğerleri */
+        .player-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: 0.3s; }
+        .player-wrapper:hover .player-overlay { opacity: 1; }
+        .at-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px !important; color: var(--lm-yellow); cursor: pointer; z-index: 20; }
+        .subtitle-menu { position: absolute; bottom: 80px; right: 20px; background: rgba(0, 0, 0, 0.9); border: 2px solid var(--lm-yellow); border-radius: 10px; padding: 10px; display: none; flex-direction: column; gap: 5px; min-width: 150px; z-index: 2147483647; }
+        .sub-option { padding: 8px 12px; cursor: pointer; border-radius: 5px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .sub-option.active { color: var(--lm-yellow); font-weight: bold; }
+        .controls-bar { padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); }
+        .progress-container { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 15px; cursor: pointer; }
+        .progress-fill { height: 100%; background: var(--lm-yellow); width: 0%; border-radius: 4px; }
+        .comment-section { margin-top: 30px; background: var(--bg-card); border-radius: 20px; padding: 30px; border-left: 10px solid var(--lm-red); }
         .comment-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .avatar { width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid #fff; }
-        
-        .ia { background: #00b4d8; } .eb { background: #d62828; } .iy { background: #5a189a; } 
-        .is { background: #fb8500; } .ct { background: #ff4d6d; } .me { background: #6c757d; }
+        .ia { background: #00b4d8; } .eb { background: #d62828; } .iy { background: #5a189a; } .is { background: #fb8500; }
 
         @media (max-width: 1100px) { .main-content { grid-template-columns: 1fr; } }
     </style>
@@ -207,10 +163,10 @@
 
 <div class="main-content">
     <section>
-        <div class="atbas-header">🐎 ATBAŞ-PLAYER PRO v3.0</div>
+        <div class="atbas-header" id="epTitle">🐎 ATBAŞ-PLAYER PRO v4.0 - Bölüm 12</div>
         <div class="player-wrapper" id="pWrapper">
             <video id="mainVideo">
-                <source src="https://www.dropbox.com/scl/fi/f2gckj27atnby9hpi7lws/Leyla-ile-Mecnun-12.-B-l-m-1080P_HD.mp4?rlkey=pt780xg75q24m3qzgutvs8pfr&st=a96jylod&raw=1" type="video/mp4">
+                <source id="videoSource" src="https://www.dropbox.com/scl/fi/f2gckj27atnby9hpi7lws/Leyla-ile-Mecnun-12.-B-l-m-1080P_HD.mp4?rlkey=pt780xg75q24m3qzgutvs8pfr&st=a96jylod&raw=1" type="video/mp4">
                 <track id="mainTrack" label="English" kind="subtitles" srclang="tr" src="altyazi.vtt" default>
             </video>
 
@@ -229,26 +185,29 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="display:flex; align-items:center; gap:15px;">
-                            <i class="material-icons-round ui-icon" id="playIcon" style="font-size:35px;">play_arrow</i>
+                            <i class="material-icons-round ui-icon" id="playIcon" style="font-size:35px; cursor:pointer;">play_arrow</i>
                             <span id="timeShow" style="font-family:monospace; font-size:14px;">00:00 / 00:00</span>
                         </div>
                         <div style="display:flex; gap:25px;">
-                            <i class="material-icons-round ui-icon" id="subBtn">subtitles</i>
-                            <i class="material-icons-round ui-icon" id="fsBtn">fullscreen</i>
+                            <i class="material-icons-round ui-icon" id="subBtn" style="cursor:pointer;">subtitles</i>
+                            <i class="material-icons-round ui-icon" id="fsBtn" style="cursor:pointer;">fullscreen</i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn" disabled><i class="material-icons-round">skip_previous</i> Önceki Bölüm</button>
+            <button class="nav-btn" id="nextBtn">Sonraki Bölüm <i class="material-icons-round">skip_next</i></button>
+        </div>
+
         <div class="comment-section">
             <h2 style="font-family:'Bangers'; color:var(--lm-yellow); font-size:28px; margin-top:0;">MAHALLE MECLİSİ</h2>
-            
             <div class="comment-item">
                 <div class="avatar ia">İA</div>
                 <div class="comment-text"><b>İsmail Abi</b><p>Hooop! Çay Erdal Bakkal'da içilir, video LEYNUN'da izlenir kardeşim!</p></div>
             </div>
-
             <div class="comment-item">
                 <div class="avatar is">İS</div>
                 <div class="comment-text"><b>İskender</b><p>Teyibi arabada unuttum umarım çalmazlar.</p></div>
@@ -257,30 +216,76 @@
                 <div class="avatar iy">Y</div>
                 <div class="comment-text"><b>Yavuz (Hırsız Değil)</b><p>Teyip mi?</p></div>
             </div>
-
-            <div class="comment-item">
-                <div class="avatar eb">EB</div>
-                <div class="comment-text"><b>Erdal Bakkal</b><p>Şu yukarıdaki Yavuz'u dükkana sokmayın, bardaklarım eksiliyor.</p></div>
-            </div>
-            <div class="comment-item">
-                <div class="avatar me">M</div>
-                <div class="comment-text"><b>Melül</b><p>.......... (Ekrandaki ata bakıyor)</p></div>
-            </div>
         </div>
     </section>
 
     <aside>
-        <div style="background:var(--bg-card); padding:20px; border-radius:15px; border:2px solid var(--lm-red);">
+        <div class="episode-list">
+            <h3 style="color:var(--lm-yellow); margin-top:0; font-family:Bangers;">BÖLÜMLER</h3>
+            <div class="ep-item active" onclick="loadEpisode(0)">
+                <i class="material-icons-round">play_circle</i> 12. Bölüm: O Gemi Gelecek
+            </div>
+            <div class="ep-item" onclick="loadEpisode(1)">
+                <i class="material-icons-round">play_circle</i> 13. Bölüm: Yeni Macera
+            </div>
+        </div>
+        <div style="background:var(--bg-card); padding:20px; border-radius:15px; border:2px solid var(--lm-red); margin-top:20px;">
             <h3 style="color:var(--lm-yellow); margin-top:0; font-family:Bangers;">GÜNCELLEMELER</h3>
-            <p style="font-size:13px; color:#aaa;"><b>Erdal Bakkal'da</b> veresiye devri sonlanmıştır!</p>
             <p style="font-size:13px; color:#aaa;"><b>Dede'nin asasına haciz konmuştur</b> artık kafamızı yaramayacak</p>
-            <p style="font-size:13px; color:#aaa;"><b>bir sonraki emre kadar</b> Arabesk Müzik yasaklanmıştır</p>
         </div>
     </aside>
 </div>
 
 <script>
+    // BÖLÜM VERİLERİ
+    const episodes = [
+        {
+            title: "Bölüm 12",
+            video: "https://www.dropbox.com/scl/fi/f2gckj27atnby9hpi7lws/Leyla-ile-Mecnun-12.-B-l-m-1080P_HD.mp4?rlkey=pt780xg75q24m3qzgutvs8pfr&st=a96jylod&raw=1",
+            sub: "altyazi.vtt"
+        },
+        {
+            title: "Bölüm 13",
+            video: "https://www.dropbox.com/scl/fi/i0d9svujlocg6e5zb1kb7/Leyla-ile-Mecnun-13.-B-l-m-1080P_HD.mp4?rlkey=m0js5vpfgxuikw8p3nc50i41y&st=wfz1rui0&raw=1",
+            sub: "altyazi13.vtt"
+        }
+    ];
+
+    let currentEp = 0;
     const video = document.getElementById('mainVideo');
+    const vSource = document.getElementById('videoSource');
+    const tSource = document.getElementById('mainTrack');
+    const epTitle = document.getElementById('epTitle');
+    const epItems = document.querySelectorAll('.ep-item');
+
+    function loadEpisode(index) {
+        currentEp = index;
+        video.pause();
+        
+        // Kaynakları Güncelle
+        vSource.src = episodes[index].video;
+        tSource.src = episodes[index].sub;
+        epTitle.innerText = "🐎 ATBAŞ-PLAYER PRO v4.0 - " + episodes[index].title;
+        
+        // Aktif Sınıfını Güncelle
+        epItems.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
+
+        // Buton Durumları
+        document.getElementById('prevBtn').disabled = (index === 0);
+        document.getElementById('nextBtn').disabled = (index === episodes.length - 1);
+
+        video.load();
+        video.play();
+        document.getElementById('atPlayBtn').style.display = "none";
+        document.getElementById('playIcon').innerText = "pause";
+    }
+
+    document.getElementById('nextBtn').onclick = () => { if(currentEp < episodes.length-1) loadEpisode(currentEp + 1); };
+    document.getElementById('prevBtn').onclick = () => { if(currentEp > 0) loadEpisode(currentEp - 1); };
+
+    // --- MEVCUT OYNATICI FONKSİYONLARI (BOZULMADI) ---
     const atPlayBtn = document.getElementById('atPlayBtn');
     const playIcon = document.getElementById('playIcon');
     const pFill = document.getElementById('pFill');
@@ -289,39 +294,22 @@
     const subMenu = document.getElementById('subMenu');
     const subBtn = document.getElementById('subBtn');
 
-    // 1. OYNAT / DURDUR
     function togglePlay() {
-        if (video.paused) {
-            video.play();
-            atPlayBtn.style.display = "none";
-            playIcon.innerText = "pause";
-        } else {
-            video.pause();
-            atPlayBtn.style.display = "block";
-            playIcon.innerText = "play_arrow";
-        }
+        if (video.paused) { video.play(); atPlayBtn.style.display = "none"; playIcon.innerText = "pause"; }
+        else { video.pause(); atPlayBtn.style.display = "block"; playIcon.innerText = "play_arrow"; }
     }
 
     atPlayBtn.onclick = togglePlay;
     playIcon.onclick = togglePlay;
     video.onclick = togglePlay;
 
-    // 2. PC KONTROLLERİ (SPACE, OKLAR, F)
     document.addEventListener('keydown', (e) => {
-        if (e.code === "Space") {
-            e.preventDefault();
-            togglePlay();
-        } else if (e.code === "ArrowRight") {
-            video.currentTime += 5;
-        } else if (e.code === "ArrowLeft") {
-            video.currentTime -= 5;
-        } else if (e.code === "KeyF") {
-            e.preventDefault();
-            toggleFullscreen();
-        }
+        if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+        else if (e.code === "ArrowRight") video.currentTime += 5;
+        else if (e.code === "ArrowLeft") video.currentTime -= 5;
+        else if (e.code === "KeyF") { e.preventDefault(); toggleFullscreen(); }
     });
 
-    // 3. ZAMAN VE PROGRESS
     video.ontimeupdate = () => {
         const pc = (video.currentTime / video.duration) * 100;
         pFill.style.width = pc + '%';
@@ -333,30 +321,11 @@
         video.currentTime = ((e.clientX - rect.left) / rect.width) * video.duration;
     };
 
-    // 4. ALTYAZI FRAME KONTROLÜ
-    subBtn.onclick = (e) => {
-        e.stopPropagation();
-        subMenu.style.display = (subMenu.style.display === "flex") ? "none" : "flex";
-    };
-
-    document.getElementById('subOn').onclick = () => {
-        video.textTracks[0].mode = 'showing';
-        document.getElementById('subOn').classList.add('active');
-        document.getElementById('subOff').classList.remove('active');
-        subMenu.style.display = "none";
-    };
-
-    document.getElementById('subOff').onclick = () => {
-        video.textTracks[0].mode = 'disabled';
-        document.getElementById('subOff').classList.add('active');
-        document.getElementById('subOn').classList.remove('active');
-        subMenu.style.display = "none";
-    };
-
-    // Dışarı tıklayınca menüyü kapat
+    subBtn.onclick = (e) => { e.stopPropagation(); subMenu.style.display = (subMenu.style.display === "flex") ? "none" : "flex"; };
+    document.getElementById('subOn').onclick = () => { video.textTracks[0].mode = 'showing'; subMenu.style.display = "none"; };
+    document.getElementById('subOff').onclick = () => { video.textTracks[0].mode = 'disabled'; subMenu.style.display = "none"; };
     document.onclick = () => subMenu.style.display = "none";
 
-    // 5. TAM EKRAN
     function toggleFullscreen() {
         if (!document.fullscreenElement) document.getElementById('pWrapper').requestFullscreen();
         else document.exitFullscreen();
@@ -371,7 +340,5 @@
 </script>
 
 </body>
-</html>
-
-
-
+            </html>
+                                                       

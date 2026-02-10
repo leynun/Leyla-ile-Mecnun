@@ -74,10 +74,11 @@
 
         /* Subtitle Styling */
         video::cue {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             color: #fff;
             font-size: 18px;
             font-family: 'Inter', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,1);
         }
 
         /* Overlays */
@@ -143,11 +144,45 @@
         .controls-flex { display: flex; align-items: center; justify-content: space-between; }
         .flex-left, .flex-right { display: flex; align-items: center; gap: 20px; }
 
-        .ui-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; transition: 0.2s; }
+        .ui-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; transition: 0.2s; position: relative; }
         .ui-btn:hover { color: var(--kick-green); transform: scale(1.1); }
         .ui-btn i { font-size: 30px; }
 
         .time-label { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+        /* --- ALTYAZI SUBMENU (GÜNCELLENEN KISIM) --- */
+        .submenu {
+            position: absolute;
+            bottom: 50px;
+            right: 0;
+            background: rgba(17, 20, 24, 0.98);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 160px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .submenu.active { display: flex; }
+        .submenu-title { font-size: 11px; color: var(--kick-green); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; padding-left: 8px; }
+        .menu-option {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .menu-option:hover { background: rgba(255,255,255,0.1); }
+        .menu-option.selected { color: var(--kick-green); background: rgba(5, 255, 18, 0.05); }
+        .menu-option i { font-size: 18px; display: none; }
+        .menu-option.selected i { display: block; }
 
         /* --- CONTENT DETAILS --- */
         .info-card { margin-top: 30px; }
@@ -171,7 +206,6 @@
         .ep-detail h4 { margin: 0 0 5px 0; font-size: 14px; }
         .ep-detail p { margin: 0; font-size: 12px; color: var(--text-dim); }
 
-        /* Buffering */
         .spinner {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -223,7 +257,14 @@
                             <div class="time-label"><span id="currTime">00:00</span> / <span id="durTime">00:00</span></div>
                         </div>
                         <div class="flex-right">
-                            <button class="ui-btn" id="subBtn" title="Altyazıyı Aç/Kapat"><i class="material-icons-round">subtitles</i></button>
+                            <div style="position: relative;">
+                                <button class="ui-btn" id="subBtn" title="Altyazı Ayarları"><i class="material-icons-round">subtitles</i></button>
+                                <div class="submenu" id="subMenu">
+                                    <div class="submenu-title">Altyazı</div>
+                                    <div class="menu-option" id="optOff">Kapalı <i class="material-icons-round">check</i></div>
+                                    <div class="menu-option selected" id="optEn">English <i class="material-icons-round">check</i></div>
+                                </div>
+                            </div>
                             <button class="ui-btn" id="fsBtn"><i class="material-icons-round">fullscreen</i></button>
                         </div>
                     </div>
@@ -285,9 +326,14 @@
     const fsBtn = document.getElementById('fsBtn');
     const muteBtn = document.getElementById('muteBtn');
     const loader = document.getElementById('loader');
-    const track = document.getElementById('mainTrack');
+    
+    // Altyazı Menü Elemanları
+    const subBtn = document.getElementById('subBtn');
+    const subMenu = document.getElementById('subMenu');
+    const optOff = document.getElementById('optOff');
+    const optEn = document.getElementById('optEn');
 
-    // 1. OYNAT / DURDUR FONKSİYONU
+    // 1. OYNAT / DURDUR
     function togglePlay() {
         if (video.paused) {
             video.play();
@@ -303,7 +349,7 @@
         playBtn.innerHTML = `<i class="material-icons-round">${icon}</i>`;
         centralPlay.innerHTML = `<i class="material-icons-round">${icon}</i>`;
         if(playing) {
-            centralPlay.parentElement.style.opacity = "0"; // Oynarken orta butonu gizle
+            centralPlay.parentElement.style.opacity = "0"; 
         } else {
             centralPlay.parentElement.style.opacity = "1";
         }
@@ -319,9 +365,10 @@
         if (e.code === 'ArrowRight') { e.preventDefault(); skip(5); }
         if (e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); }
         if (e.code === 'KeyF') { e.preventDefault(); toggleFullscreen(); }
+        if (e.code === 'KeyC') { e.preventDefault(); toggleSubtitle(); }
     });
 
-    // 3. İLERİ / GERİ BUTONLARI
+    // 3. İLERİ / GERİ
     function skip(val) {
         video.currentTime += val;
     }
@@ -352,25 +399,38 @@
             else if (pWrapper.webkitRequestFullscreen) pWrapper.webkitRequestFullscreen();
             fsBtn.innerHTML = '<i class="material-icons-round">fullscreen_exit</i>';
         } else {
-            document.exitFullscreen();
+            if (document.exitFullscreen) document.exitFullscreen();
             fsBtn.innerHTML = '<i class="material-icons-round">fullscreen</i>';
         }
     }
     fsBtn.onclick = (e) => { e.stopPropagation(); toggleFullscreen(); };
 
-    // 6. ALTYAZI KONTROL
-    document.getElementById('subBtn').onclick = (e) => {
+    // 6. PROFESYONEL ALTYAZI MENÜ KONTROLÜ
+    subBtn.onclick = (e) => {
         e.stopPropagation();
-        if (video.textTracks[0].mode === 'showing') {
-            video.textTracks[0].mode = 'disabled';
-            alert("Altyazı Kapatıldı");
-        } else {
-            video.textTracks[0].mode = 'showing';
-            alert("English Altyazı Aktif");
-        }
+        subMenu.classList.toggle('active');
     };
 
-    // 7. YÜKLENİYOR (BUFFERING)
+    function toggleSubtitle(mode) {
+        if (mode === 'off') {
+            video.textTracks[0].mode = 'disabled';
+            optOff.classList.add('selected');
+            optEn.classList.remove('selected');
+        } else {
+            video.textTracks[0].mode = 'showing';
+            optEn.classList.add('selected');
+            optOff.classList.remove('selected');
+        }
+        subMenu.classList.remove('active');
+    }
+
+    optOff.onclick = (e) => { e.stopPropagation(); toggleSubtitle('off'); };
+    optEn.onclick = (e) => { e.stopPropagation(); toggleSubtitle('en'); };
+
+    // Dışarı tıklayınca menüyü kapat
+    document.addEventListener('click', () => subMenu.classList.remove('active'));
+
+    // 7. YÜKLENİYOR
     video.onwaiting = () => loader.style.display = 'block';
     video.onplaying = () => loader.style.display = 'none';
 
@@ -389,6 +449,4 @@
 </script>
 
 </body>
-
 </html>
-

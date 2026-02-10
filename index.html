@@ -98,9 +98,18 @@
         video { width: 100%; height: 100%; object-fit: contain; }
 
         video::cue {
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            font-size: 18px;
+            background: transparent !important;
+            color: #ffffff !important;
+            font-size: 28px !important; /* Boyutu buradan ayarla (32 çok büyükse 28 idealdir) */
+            font-weight: 900 !important;
+            font-family: 'Inter', sans-serif;
+            /* Yazının her yerde okunması için siyah dış hat */
+            text-shadow: 
+                2px 2px 0px #000, 
+                -2px -2px 0px #000, 
+                2px -2px 0px #000, 
+                -2px 2px 0px #000,
+                0px 0px 8px rgba(0,0,0,1) !important;
         }
 
         .player-overlay {
@@ -139,7 +148,7 @@
             flex-direction: column;
             gap: 5px;
             min-width: 150px;
-            z-index: 100;
+            z-index: 2147483647;
         }
         .sub-option {
             padding: 8px 12px;
@@ -363,5 +372,6 @@
 
 </body>
 </html>
+
 
 

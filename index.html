@@ -3,50 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LEYNUN - Atbaş Player S1E12</title>
+    <title>LEYNUN - Kireçburnu İzleme Platformu</title>
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --lm-red: #e63946;
             --lm-yellow: #ffb703;
-            --bg-body: #0a0e14;
-            --bg-card: #161b22;
-            --border: #24272c;
+            --bg-card: rgba(22, 27, 34, 0.95);
+            --border: #3d2b1f;
         }
 
         body {
-            background-color: var(--bg-body);
+            /* ARKA PLAN RESMİ */
+            background: url('lm.png') no-repeat center center fixed;
+            background-size: cover;
             color: #efeff1;
             font-family: 'Inter', sans-serif;
             margin: 0; padding: 0;
             overflow-x: hidden;
         }
 
-        /* --- LEYNUN LOGO --- */
+        /* Sayfa üzerine karartma katmanı (Okunabilirlik için) */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        /* --- LEYNUN LOGO & HEADER --- */
         nav {
             height: 75px;
-            background: rgba(11, 14, 17, 0.98);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 5%;
             position: sticky; top: 0; z-index: 1000;
-            border-bottom: 3px solid var(--lm-red);
+            border-bottom: 4px solid var(--lm-red);
         }
 
         .leynun-logo {
             font-family: 'Bangers', cursive;
-            font-size: 40px;
+            font-size: 42px;
             letter-spacing: 2px;
             background: linear-gradient(90deg, var(--lm-red) 0%, var(--lm-yellow) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
         }
 
-        /* --- ERDAL BAKKAL REKLAMI --- */
         .erdal-ads {
             background: #fdf0d5;
             color: #333;
@@ -61,6 +71,7 @@
         }
         .erdal-ads img { height: 45px; }
 
+        /* --- LAYOUT --- */
         .main-content {
             max-width: 1400px;
             margin: 20px auto;
@@ -70,17 +81,18 @@
             gap: 30px;
         }
 
-        @media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } }
+        @media (max-width: 1100px) { .main-content { grid-template-columns: 1fr; } }
 
-        /* --- ATBAŞ PLAYER CORE --- */
+        /* --- ATBAŞ PLAYER --- */
         .atbas-header {
             background: var(--lm-red);
             color: white;
-            padding: 6px 20px;
+            padding: 8px 25px;
             display: inline-block;
             font-family: 'Bangers';
-            border-radius: 12px 12px 0 0;
-            font-size: 18px;
+            border-radius: 15px 15px 0 0;
+            font-size: 20px;
+            letter-spacing: 1px;
         }
 
         .player-wrapper {
@@ -88,19 +100,26 @@
             width: 100%;
             aspect-ratio: 16/9;
             background: #000;
-            border: 6px solid #3d2b1f; /* At kahvesi çerçeve */
-            border-radius: 0 15px 15px 15px;
+            border: 8px solid var(--border);
+            border-radius: 0 20px 20px 20px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
         }
 
-        video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
+        video { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Overlays */
+        /* Altyazı Fontu */
+        video::cue {
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9em;
+        }
+
         .player-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.6) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%, rgba(0,0,0,0.7) 100%);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -108,59 +127,67 @@
             transition: 0.3s;
             z-index: 10;
         }
-        .player-wrapper:hover .player-overlay, .player-wrapper.paused .player-overlay { opacity: 1; }
+        .player-wrapper:hover .player-overlay { opacity: 1; }
 
         .center-actions {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            display: flex; gap: 40px; align-items: center;
+            display: flex; gap: 50px; align-items: center;
         }
 
-        .action-icon {
-            background: rgba(0,0,0,0.5);
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s;
-            color: white;
+        .at-play-btn {
+            font-size: 100px !important;
+            color: var(--lm-yellow);
+            cursor: pointer;
+            text-shadow: 0 0 20px rgba(0,0,0,1);
+            transition: 0.3s;
         }
-        .action-icon:hover { color: var(--lm-yellow); transform: scale(1.1); }
-        .big-play { width: 90px; height: 90px; border: 3px solid var(--lm-yellow); color: var(--lm-yellow); }
+        .at-play-btn:hover { transform: scale(1.1) rotate(-5deg); }
 
-        /* Controls */
-        .bottom-ui { padding: 20px; }
         .progress-container {
-            width: 100%; height: 8px;
+            width: 100%; height: 10px;
             background: rgba(255,255,255,0.2);
-            border-radius: 10px; margin-bottom: 15px; cursor: pointer;
+            border-radius: 5px; margin-bottom: 15px; cursor: pointer;
         }
-        .progress-fill { height: 100%; background: var(--lm-yellow); width: 0%; border-radius: 10px; }
+        .progress-fill { height: 100%; background: var(--lm-yellow); width: 0%; border-radius: 5px; box-shadow: 0 0 10px var(--lm-yellow); }
 
-        .controls-flex { display: flex; align-items: center; justify-content: space-between; }
-        .ui-btn { background: none; border: none; color: #fff; cursor: pointer; transition: 0.2s; }
-        .ui-btn:hover { color: var(--lm-yellow); transform: scale(1.2); }
-
-        /* --- ABSÜRT YORUMLAR --- */
+        /* --- ABSÜRT YORUMLAR (BOL BOL) --- */
         .comment-section {
             margin-top: 30px;
             background: var(--bg-card);
-            border-radius: 15px;
-            padding: 25px;
-            border-left: 8px solid var(--lm-red);
+            border-radius: 20px;
+            padding: 30px;
+            border-top: 10px solid var(--lm-yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+
         .comment-item {
-            display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #333;
+            display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+
         .avatar {
-            width: 45px; height: 45px; border-radius: 50%;
-            background: var(--lm-red); display: flex; align-items: center; justify-content: center; font-weight: 800;
+            width: 55px; height: 55px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: 800; border: 2px solid white;
         }
-        .comment-text b { color: var(--lm-yellow); display: block; margin-bottom: 4px; }
+
+        .comment-text b { color: var(--lm-yellow); display: block; font-size: 16px; margin-bottom: 5px; }
+        .comment-text p { margin: 0; color: #ced4da; line-height: 1.5; }
+
+        /* Karakter Renkleri */
+        .ia { background: #00b4d8; } /* İsmail Abi */
+        .eb { background: #d62828; } /* Erdal Bakkal */
+        .iy { background: #5a189a; } /* Yavuz */
+        .is { background: #fb8500; } /* İskender */
+        .ct { background: #ff4d6d; } /* Çiçekçi Teyze */
+        .me { background: #6c757d; } /* Melül */
+        .ar { background: #2a9d8f; } /* Arda */
+        .ab { background: #023e8a; } /* Arda'nın Babası */
 
         .spinner {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 50px; height: 50px; border: 4px solid rgba(255,183,3,0.1);
+            width: 60px; height: 60px; border: 5px solid rgba(255,183,3,0.1);
             border-top-color: var(--lm-yellow); border-radius: 50%; animation: spin 1s infinite linear; display: none;
         }
         @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
@@ -178,35 +205,34 @@
 
 <div class="main-content">
     <section>
-        <div class="atbas-header">🐎 ATBAŞ-PLAYER</div>
+        <div class="atbas-header">🐎 ATBAŞ-PLAYER PRO V2.0</div>
         <div class="player-wrapper" id="pWrapper">
             <div class="spinner" id="loader"></div>
-            <video id="mainVideo" playsinline>
+            
+            <video id="mainVideo" playsinline crossorigin="anonymous">
                 <source src="https://www.dropbox.com/scl/fi/f2gckj27atnby9hpi7lws/Leyla-ile-Mecnun-12.-B-l-m-1080P_HD.mp4?rlkey=pt780xg75q24m3qzgutvs8pfr&st=a96jylod&raw=1" type="video/mp4">
-                <track id="mainTrack" label="English" kind="subtitles" srclang="en" src="https://www.dropbox.com/scl/fi/la3ko6zla4wsdjoot8mag/Leyla-ile-Mecnun-S01E12-Cesek-012.srt?rlkey=0kj9f1o5z64lo2iji20ti3bho&st=k45s68g9&raw=1" default>
+                <track id="mainTrack" label="Türkçe" kind="subtitles" srclang="tr" src="https://www.dropbox.com/scl/fi/la3ko6zla4wsdjoot8mag/Leyla-ile-Mecnun-S01E12-Cesek-012.srt?rlkey=0kj9f1o5z64lo2iji20ti3bho&st=k45s68g9&raw=1" default>
             </video>
 
-            <div class="player-overlay" id="pOverlay">
-                <div style="padding:20px; font-weight:600">S1:E12 - Gemi Elbet Bir Gün Gelecek</div>
+            <div class="player-overlay">
+                <div style="padding:25px; font-family:'Bangers'; font-size:22px;">S1 : E12 - O Gemi Elbet Bir Gün Gelecek... mi?</div>
                 
                 <div class="center-actions">
-                    <div class="action-icon" onclick="video.currentTime -= 5"><i class="material-icons-round">replay_5</i></div>
-                    <div class="action-icon big-play" id="centralPlay"><i class="material-icons-round" style="font-size:50px">pest_control_rodent</i></div>
-                    <div class="action-icon" onclick="video.currentTime += 5"><i class="material-icons-round">forward_5</i></div>
+                    <i class="material-icons-round at-play-btn" id="atPlayBtn">pest_control_rodent</i>
                 </div>
 
-                <div class="bottom-ui">
+                <div style="padding:25px;">
                     <div class="progress-container" id="pContainer">
                         <div class="progress-fill" id="pFill"></div>
                     </div>
-                    <div class="controls-flex">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="display:flex; align-items:center; gap:20px;">
-                            <button class="ui-btn" id="playBtn"><i class="material-icons-round" style="font-size:35px">play_arrow</i></button>
-                            <div style="font-size:14px"><span id="currTime">00:00</span> / <span id="durTime">00:00</span></div>
+                            <i class="material-icons-round" id="playIcon" style="cursor:pointer; font-size:40px;">play_arrow</i>
+                            <span style="font-family:monospace;" id="timeShow">00:00 / 00:00</span>
                         </div>
-                        <div>
-                            <button class="ui-btn" id="subBtn"><i class="material-icons-round">subtitles</i></button>
-                            <button class="ui-btn" id="fsBtn" style="margin-left:15px"><i class="material-icons-round">fullscreen</i></button>
+                        <div style="display:flex; gap:20px;">
+                            <i class="material-icons-round" id="subBtn" style="cursor:pointer;" title="Altyazı">subtitles</i>
+                            <i class="material-icons-round" id="fsBtn" style="cursor:pointer;">fullscreen</i>
                         </div>
                     </div>
                 </div>
@@ -214,86 +240,119 @@
         </div>
 
         <div class="comment-section">
-            <h3 style="font-family:'Bangers'; color:var(--lm-red); font-size:24px; margin-top:0;">ABSÜRT YORUMLAR</h3>
+            <h2 style="font-family:'Bangers'; color:var(--lm-red); margin-bottom:30px; font-size:32px;">KİREÇBURNU SAKİNLERİ NE DİYOR?</h2>
+            
             <div class="comment-item">
-                <div class="avatar">İA</div>
-                <div class="comment-text"><b>İsmail Abi</b>Örselemeyin beni, üzerime gelmeyin! Gemi gelecek diye beklerken videoyu bitirdim.</div>
+                <div class="avatar ia">İA</div>
+                <div class="comment-text"><b>İsmail Abi</b><p>Genlerimde var benim, bu videoyu saniyede 24 kare değil, saniyede 3 paket çay içerek izliyorum. Hooop!</p></div>
             </div>
+
             <div class="comment-item">
-                <div class="avatar" style="background:var(--lm-yellow); color:#000;">EB</div>
-                <div class="comment-text"><b>Erdal Bakkal</b>Çay Erdal bakkalda içilir. Videoyu izlerken çay içmeyenin dükkanına haciz getiririm!</div>
+                <div class="avatar eb">EB</div>
+                <div class="comment-text"><b>Erdal Bakkal</b><p>Gözüm üzerinizde! Videoyu durdurup bakkala gelmeyenin defterini dürerim. Çay için çay!</p></div>
+            </div>
+
+            <div class="comment-item">
+                <div class="avatar is">İS</div>
+                <div class="comment-text"><b>İskender</b><p>Mecnun! Yine mi bilgisayar başındasın? Kalk bir işin ucundan tut, akşam oldu akşam!</p></div>
+            </div>
+
+            <div class="comment-item">
+                <div class="avatar iy">Y</div>
+                <div class="comment-text"><b>Yavuz (Hırsız değil)</b><p>Performansımı nasıl buldunuz? Ben aslında bu yorumu yazmıyorum, şu an başka bir yerde şiir okuyorum.</p></div>
+            </div>
+
+            <div class="comment-item">
+                <div class="avatar ct">CT</div>
+                <div class="comment-text"><b>Çiçekçi Teyze</b><p>Taze çiçeklerim var, videonun yanına koymalık... Almaz mısın güzel evladım?</p></div>
+            </div>
+
+            <div class="comment-item">
+                <div class="avatar me">M</div>
+                <div class="comment-text"><b>Melül</b><p>.......... (Boşluğa bakıyor)</p></div>
+            </div>
+
+            <div class="comment-item">
+                <div class="avatar ar">A</div>
+                <div class="comment-text"><b>Arda</b><p>Baba, bu platformda neden reklam yok? Premium üyelik satabiliriz aslında.</p></div>
+            </div>
+
+            <div class="comment-item">
+                <div class="avatar ab">AB</div>
+                <div class="comment-text"><b>Arda'nın Babası</b><p>Aferin oğlum Arda, hemen bir iş modeli oluşturup Kireçburnu'nu kalkındıralım.</p></div>
             </div>
         </div>
     </section>
 
     <aside>
-        <div style="background:var(--bg-card); padding:20px; border-radius:15px; border:1px solid var(--lm-red);">
-            <h4 style="margin:0 0 10px 0; color:var(--lm-yellow)">KİREÇBURNU TV</h4>
-            <p style="font-size:13px; color:#adadb8;">Bu bölümde gemi gelmezse bir sonraki bölüme geçiniz. (Zaten gelmiyor...)</p>
+        <div style="background:var(--bg-card); padding:20px; border-radius:15px; border:2px solid var(--lm-red); position:sticky; top:100px;">
+            <h3 style="color:var(--lm-yellow); margin-top:0;">DUYURULAR</h3>
+            <p style="font-size:14px;">- Yavuz'un televizyonu hala kayıp.</p>
+            <p style="font-size:14px;">- Erdal Bakkal'da veresiye dönemi kapandı.</p>
+            <p style="font-size:14px;">- Gemi beklemek ücretsizdir.</p>
+            <hr style="border:0; border-top:1px solid #444;">
+            <small>LEYNUN v2.0 - 2026</small>
         </div>
     </aside>
 </div>
 
 <script>
     const video = document.getElementById('mainVideo');
-    const playBtn = document.getElementById('playBtn');
-    const centralPlay = document.getElementById('centralPlay');
+    const atPlayBtn = document.getElementById('atPlayBtn');
+    const playIcon = document.getElementById('playIcon');
     const pFill = document.getElementById('pFill');
     const pContainer = document.getElementById('pContainer');
-    const fsBtn = document.getElementById('fsBtn');
+    const timeShow = document.getElementById('timeShow');
     const loader = document.getElementById('loader');
 
+    // OYNAT DURDUR
     function togglePlay() {
         if (video.paused) {
             video.play();
-            playBtn.innerHTML = '<i class="material-icons-round" style="font-size:35px">pause</i>';
-            centralPlay.style.opacity = "0";
+            atPlayBtn.style.opacity = "0";
+            playIcon.innerText = "pause";
         } else {
             video.pause();
-            playBtn.innerHTML = '<i class="material-icons-round" style="font-size:35px">play_arrow</i>';
-            centralPlay.style.opacity = "1";
+            atPlayBtn.style.opacity = "1";
+            playIcon.innerText = "play_arrow";
         }
     }
 
-    playBtn.onclick = (e) => { e.stopPropagation(); togglePlay(); };
-    centralPlay.onclick = (e) => { e.stopPropagation(); togglePlay(); };
+    atPlayBtn.onclick = togglePlay;
+    playIcon.onclick = togglePlay;
     video.onclick = togglePlay;
 
+    // ZAMAN & PROGRESS
     video.ontimeupdate = () => {
         const pc = (video.currentTime / video.duration) * 100;
         pFill.style.width = pc + '%';
-        document.getElementById('currTime').innerText = format(video.currentTime);
-    };
-
-    video.onloadedmetadata = () => {
-        document.getElementById('durTime').innerText = format(video.duration);
+        timeShow.innerText = format(video.currentTime) + " / " + format(video.duration);
     };
 
     pContainer.onclick = (e) => {
         const rect = pContainer.getBoundingClientRect();
-        const pos = (e.clientX - rect.left) / rect.width;
-        video.currentTime = pos * video.duration;
+        video.currentTime = ((e.clientX - rect.left) / rect.width) * video.duration;
     };
 
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.getElementById('pWrapper').requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
-    }
-    fsBtn.onclick = toggleFullscreen;
-
-    document.getElementById('subBtn').onclick = (e) => {
-        e.stopPropagation();
-        const mode = video.textTracks[0].mode;
-        video.textTracks[0].mode = (mode === 'showing' ? 'disabled' : 'showing');
+    // ALTYAZI (Kritik Düzeltme)
+    document.getElementById('subBtn').onclick = () => {
+        const track = video.textTracks[0];
+        track.mode = (track.mode === 'showing' ? 'disabled' : 'showing');
+        alert(track.mode === 'showing' ? "Altyazı Açıldı" : "Altyazı Kapatıldı");
     };
 
+    // FULLSCREEN
+    document.getElementById('fsBtn').onclick = () => {
+        if (!document.fullscreenElement) document.getElementById('pWrapper').requestFullscreen();
+        else document.exitFullscreen();
+    };
+
+    // LOADING
     video.onwaiting = () => loader.style.display = 'block';
     video.onplaying = () => loader.style.display = 'none';
 
     function format(s) {
+        if(isNaN(s)) return "00:00";
         let m = Math.floor(s/60);
         let sec = Math.floor(s%60);
         return (m < 10 ? '0'+m : m) + ":" + (sec < 10 ? '0'+sec : sec);

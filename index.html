@@ -3,48 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Leyla ile Mecnun - S01E12 | Profesyonel İzleme Paneli</title>
+    <title>LEYNUN - Atbaş Player S1E12</title>
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --kick-green: #05FF12;
-            --bg-body: #06080a;
-            --bg-card: #111418;
-            --text-main: #efeff1;
-            --text-dim: #adadb8;
-            --border: #24272c;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --lm-red: #e63946;
+            --lm-yellow: #ffb703;
+            --bg-body: #0a0e14;
+            --bg-card: #161b22;
+            --at-pattern: url('https://www.transparenttextures.com/patterns/p6.png'); /* At dokusu hissi için ince desen */
         }
-
-        * { box-sizing: border-box; outline: none; }
 
         body {
             background-color: var(--bg-body);
-            color: var(--text-main);
+            background-image: var(--at-pattern);
+            color: #efeff1;
             font-family: 'Inter', sans-serif;
             margin: 0; padding: 0;
-            overflow-x: hidden;
         }
 
-        /* --- HEADER --- */
+        /* --- LEYNUN LOGO (Kırmızıdan Sarıya) --- */
         nav {
-            height: 65px;
-            background: rgba(11, 14, 17, 0.98);
+            height: 80px;
+            background: rgba(0,0,0,0.9);
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 5%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 3px solid var(--lm-red);
         }
-        .logo { font-weight: 800; font-size: 20px; color: var(--kick-green); text-transform: uppercase; letter-spacing: -1px; }
-        .logo span { color: #fff; margin-left: 5px; }
 
-        /* --- LAYOUT --- */
+        .leynun-logo {
+            font-family: 'Bangers', cursive;
+            font-size: 42px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--lm-red) 0%, var(--lm-yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        /* --- ERDAL BAKKAL REKLAM ALANI --- */
+        .erdal-ads {
+            background: #fdf0d5;
+            color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 800;
+            border: 4px dashed var(--lm-red);
+            margin-right: 20px;
+        }
+        .erdal-ads img { height: 50px; }
+
         .main-content {
             max-width: 1400px;
             margin: 20px auto;
@@ -54,263 +70,181 @@
             gap: 30px;
         }
 
-        @media (max-width: 1200px) {
-            .main-content { grid-template-columns: 1fr; }
+        /* --- ATBAŞ PLAYER --- */
+        .atbas-title {
+            background: var(--lm-red);
+            color: white;
+            padding: 5px 15px;
+            display: inline-block;
+            font-family: 'Bangers';
+            font-size: 20px;
+            border-radius: 10px 10px 0 0;
         }
 
-        /* --- ULTIMATE PLAYER CORE --- */
         .player-wrapper {
             position: relative;
             width: 100%;
             aspect-ratio: 16/9;
             background: #000;
-            border-radius: 12px;
+            border: 8px solid #3d2b1f; /* At kahverengisi çerçeve */
+            border-radius: 0 15px 15px 15px;
             overflow: hidden;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(230, 57, 70, 0.3);
         }
 
-        video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
+        video { width: 100%; height: 100%; }
 
-        /* Subtitle Styling */
-        video::cue {
-            background: rgba(0, 0, 0, 0.75);
-            color: #fff;
-            font-size: 18px;
-            font-family: 'Inter', sans-serif;
-            text-shadow: 2px 2px 4px rgba(0,0,0,1);
+        /* Absürt Durdurma Butonu (At Şeklinde) */
+        .at-btn {
+            font-size: 50px !important;
+            color: var(--lm-yellow);
+            cursor: pointer;
+            transition: 0.3s;
         }
+        .at-btn:hover { transform: scale(1.2) rotate(-10deg); color: white; }
 
-        /* Overlays */
         .player-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.7) 100%);
+            background: rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             opacity: 0;
-            transition: var(--transition);
+            transition: 0.3s;
             z-index: 10;
         }
-        .player-wrapper:hover .player-overlay,
-        .player-wrapper.paused .player-overlay { opacity: 1; }
+        .player-wrapper:hover .player-overlay { opacity: 1; }
 
-        .top-info { padding: 25px; font-weight: 600; font-size: 18px; text-shadow: 0 2px 10px #000; }
+        .progress-bar { height: 8px; background: var(--lm-yellow); box-shadow: 0 0 10px var(--lm-yellow); }
 
-        .center-actions {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            gap: 50px;
+        /* --- ABSÜRT YORUMLAR --- */
+        .comment-box {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 10px solid var(--lm-yellow);
         }
 
-        .action-icon {
-            background: rgba(0,0,0,0.5);
-            width: 60px; height: 60px;
+        .comment-item {
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .char-avatar {
+            width: 50px; height: 50px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255,255,255,0.2);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .action-icon:hover { background: var(--kick-green); color: #000; border-color: var(--kick-green); }
-        .action-icon i { font-size: 32px; }
-
-        .big-play { width: 85px; height: 85px; border: 2px solid var(--kick-green); }
-        .big-play i { font-size: 50px; }
-
-        /* Controls Bottom */
-        .bottom-ui { padding: 10px 25px 25px; }
-
-        .progress-container {
-            width: 100%; height: 6px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            position: relative;
-        }
-        .progress-fill {
-            height: 100%; background: var(--kick-green);
-            width: 0%; border-radius: 10px;
-            box-shadow: 0 0 15px rgba(5, 255, 18, 0.5);
+            background: var(--lm-red);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 20px;
         }
 
-        .controls-flex { display: flex; align-items: center; justify-content: space-between; }
-        .flex-left, .flex-right { display: flex; align-items: center; gap: 20px; }
+        .comment-text b { color: var(--lm-yellow); display: block; margin-bottom: 5px; }
 
-        .ui-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; transition: 0.2s; position: relative; }
-        .ui-btn:hover { color: var(--kick-green); transform: scale(1.1); }
-        .ui-btn i { font-size: 30px; }
-
-        .time-label { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
-
-        /* --- ALTYAZI SUBMENU (GÜNCELLENEN KISIM) --- */
-        .submenu {
-            position: absolute;
-            bottom: 50px;
-            right: 0;
-            background: rgba(17, 20, 24, 0.98);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
-            min-width: 160px;
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            z-index: 100;
-            backdrop-filter: blur(10px);
+        /* Sidebar */
+        .side-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--lm-red);
         }
-        .submenu.active { display: flex; }
-        .submenu-title { font-size: 11px; color: var(--kick-green); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; padding-left: 8px; }
-        .menu-option {
-            padding: 10px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
+
+        .absurd-tag {
+            background: var(--lm-red);
+            color: white;
+            padding: 2px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: inline-block;
         }
-        .menu-option:hover { background: rgba(255,255,255,0.1); }
-        .menu-option.selected { color: var(--kick-green); background: rgba(5, 255, 18, 0.05); }
-        .menu-option i { font-size: 18px; display: none; }
-        .menu-option.selected i { display: block; }
-
-        /* --- CONTENT DETAILS --- */
-        .info-card { margin-top: 30px; }
-        .info-card h1 { font-size: 32px; margin: 0 0 10px 0; font-weight: 800; }
-        .meta-tags { display: flex; gap: 15px; margin-bottom: 20px; }
-        .tag { background: var(--bg-card); padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); }
-        .tag.green { color: var(--kick-green); border-color: var(--kick-green); }
-
-        .desc-box { background: var(--bg-card); padding: 20px; border-radius: 12px; line-height: 1.7; color: #ced4da; border: 1px solid var(--border); }
-
-        /* --- SIDEBAR EPISODES --- */
-        .sidebar-header { font-weight: 800; font-size: 18px; margin-bottom: 20px; color: var(--kick-green); display: flex; align-items: center; gap: 10px; }
-        .ep-list { display: flex; flex-direction: column; gap: 12px; }
-        .ep-item {
-            display: flex; gap: 15px; background: var(--bg-card); padding: 12px; border-radius: 10px;
-            border: 1px solid transparent; cursor: pointer; transition: 0.2s;
-        }
-        .ep-item:hover { border-color: #444; background: #1a1d21; }
-        .ep-item.active { border-color: var(--kick-green); background: rgba(5, 255, 18, 0.05); }
-        .ep-thumb { width: 130px; aspect-ratio: 16/9; background: #222; border-radius: 6px; object-fit: cover; }
-        .ep-detail h4 { margin: 0 0 5px 0; font-size: 14px; }
-        .ep-detail p { margin: 0; font-size: 12px; color: var(--text-dim); }
-
-        .spinner {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px; height: 60px;
-            border: 4px solid rgba(5, 255, 18, 0.1);
-            border-top-color: var(--kick-green);
-            border-radius: 50%;
-            animation: spin 1s infinite linear;
-            display: none; z-index: 100;
-        }
-        @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo">L&M<span>PLAYER</span></div>
+    <div class="leynun-logo">LEYNUN</div>
+    
+    <div class="erdal-ads">
+        <img src="erdalbakkal.png" alt="Erdal Bakkal">
+        <span>Çay Erdal bakkalda içilir, <br><small>Reklam değil ha çok güzel çay yapıyor!</small></span>
+    </div>
 </nav>
 
 <div class="main-content">
     
     <section>
+        <div class="atbas-title">🐎 ATBAŞ-PLAYER V1.0</div>
         <div class="player-wrapper" id="pWrapper">
-            <div class="spinner" id="loader"></div>
-            
-            <video id="mainVideo" playsinline crossorigin="anonymous">
+            <video id="mainVideo" crossorigin="anonymous">
                 <source src="https://www.dropbox.com/scl/fi/f2gckj27atnby9hpi7lws/Leyla-ile-Mecnun-12.-B-l-m-1080P_HD.mp4?rlkey=pt780xg75q24m3qzgutvs8pfr&st=a96jylod&raw=1" type="video/mp4">
                 <track id="mainTrack" label="English" kind="subtitles" srclang="en" src="altyazi.vtt" default>
-            </video>        
+            </video>
 
-            <div class="player-overlay" id="pOverlay">
-                <div class="top-info">S1 : E12 - Gemi Elbet Bir Gün Gelecek</div>
-
-                <div class="center-actions">
-                    <div class="action-icon" id="rewind5"><i class="material-icons-round">replay_5</i></div>
-                    <div class="action-icon big-play" id="centralPlay"><i class="material-icons-round">play_arrow</i></div>
-                    <div class="action-icon" id="forward5"><i class="material-icons-round">forward_5</i></div>
+            <div class="player-overlay">
+                <div style="padding:20px; font-family:'Bangers'; letter-spacing:1px;">L&M - Bölüm 12: O Gemi Gelecek!</div>
+                
+                <div class="center-actions" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; gap:40px; align-items:center;">
+                    <i class="material-icons-round at-btn" onclick="video.currentTime -= 5">keyboard_double_arrow_left</i>
+                    <i class="material-icons-round at-btn" id="atPlayBtn" style="font-size:100px !important;">pest_control_rodent</i> 
+                    <i class="material-icons-round at-btn" onclick="video.currentTime += 5">keyboard_double_arrow_right</i>
                 </div>
 
-                <div class="bottom-ui">
-                    <div class="progress-container" id="pContainer">
-                        <div class="progress-fill" id="pFill"></div>
+                <div style="padding:20px;">
+                    <div class="progress-container" id="pContainer" style="background:rgba(255,255,255,0.2); height:8px; border-radius:10px; cursor:pointer;">
+                        <div class="progress-bar" id="pFill" style="width:0%; border-radius:10px;"></div>
                     </div>
-                    
-                    <div class="controls-flex">
-                        <div class="flex-left">
-                            <button class="ui-btn" id="playBtn"><i class="material-icons-round">play_arrow</i></button>
-                            <button class="ui-btn" id="muteBtn"><i class="material-icons-round">volume_up</i></button>
-                            <div class="time-label"><span id="currTime">00:00</span> / <span id="durTime">00:00</span></div>
-                        </div>
-                        <div class="flex-right">
-                            <div style="position: relative;">
-                                <button class="ui-btn" id="subBtn" title="Altyazı Ayarları"><i class="material-icons-round">subtitles</i></button>
-                                <div class="submenu" id="subMenu">
-                                    <div class="submenu-title">Altyazı</div>
-                                    <div class="menu-option" id="optOff">Kapalı <i class="material-icons-round">check</i></div>
-                                    <div class="menu-option selected" id="optEn">English <i class="material-icons-round">check</i></div>
-                                </div>
-                            </div>
-                            <button class="ui-btn" id="fsBtn"><i class="material-icons-round">fullscreen</i></button>
+                    <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                        <span id="currTime">00:00</span>
+                        <div>
+                            <i class="material-icons-round" style="cursor:pointer" onclick="video.textTracks[0].mode = (video.textTracks[0].mode == 'showing' ? 'disabled' : 'showing')">subtitles</i>
+                            <i class="material-icons-round" style="cursor:pointer; margin-left:15px;" id="fsBtn">fullscreen</i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="info-card">
-            <div class="meta-tags">
-                <div class="tag green">S1 E12</div>
-                <div class="tag">Komedi / Dram</div>
-                <div class="tag">1080p Ultra HD</div>
-                <div class="tag">English Subtitles</div>
+        <div class="comment-box">
+            <h2 style="font-family:'Bangers'; color:var(--lm-red)">ABSÜRT YORUMLAR</h2>
+            
+            <div class="comment-item">
+                <div class="char-avatar" style="background:#00b4d8">İA</div>
+                <div class="comment-text">
+                    <b>İsmail Abi</b>
+                    Örselemeyin beni, üzerime gelmeyin! Genlerimde var benim, bu bölümü tam 1080p izlerim!
+                </div>
             </div>
-            <h1>Leyla ile Mecnun - Gemi Elbet Bir Gün Gelecek</h1>
-            <div class="desc-box">
-                Mecnun, Leyla'nın peşinde koşarken İsmail Abi sahilde her zamanki yerinde beklemektedir. 
-                Metropolün ortasında absürt bir mahalle hikayesi... Bu bölümde geminin gelip gelmeyeceği 
-                merak konusu olurken, Yavuz yine performansını sorguluyor.
+
+            <div class="comment-item">
+                <div class="char-avatar" style="background:#d62828">EB</div>
+                <div class="comment-text">
+                    <b>Erdal Bakkal</b>
+                    Şu videonun altına 'çaylar Erdal Bakkal'dan' yazın, yoksa izletmem. Reklam değil bu, gönül işi!
+                </div>
+            </div>
+
+            <div class="comment-item">
+                <div class="char-avatar" style="background:#f77f00">Y</div>
+                <div class="comment-text">
+                    <b>Yavuz (Hırsız olan değil)</b>
+                    Benim de performansım bu işte, videoyu durdurup durdurup şiir okuyorum.
+                </div>
             </div>
         </div>
     </section>
 
     <aside>
-        <div class="sidebar-header"><i class="material-icons-round">playlist_play</i> SIRADAKİ BÖLÜMLER</div>
-        <div class="ep-list">
-            <div class="ep-item active">
-                <img src="https://m.media-amazon.com/images/M/MV5BMjA5OTM2OTk2Nl5BMl5BanBnXkFtZTgwMjc1OTY5NjE@._V1_.jpg" class="ep-thumb">
-                <div class="ep-detail">
-                    <h4>Bölüm 12 (İzleniyor)</h4>
-                    <p>58 Dakika</p>
-                </div>
-            </div>
-            <div class="ep-item">
-                <div class="ep-thumb" style="display:flex;align-items:center;justify-content:center;background:#222;font-weight:800;color:#555">13</div>
-                <div class="ep-detail">
-                    <h4>Bölüm 13: Pişmanlık</h4>
-                    <p>61 Dakika</p>
-                </div>
-            </div>
-            <div class="ep-item">
-                <div class="ep-thumb" style="display:flex;align-items:center;justify-content:center;background:#222;font-weight:800;color:#555">14</div>
-                <div class="ep-detail">
-                    <h4>Bölüm 14: Büyük Sır</h4>
-                    <p>55 Dakika</p>
-                </div>
+        <div class="side-card">
+            <span class="absurd-tag">KİREÇBURNU TV</span>
+            <h3 style="margin-top:0">Yandaki Bölümler</h3>
+            <p style="font-size:13px; color:var(--text-dim)">Buradan başka bölüme geçersen Yavuz'un televizyonunu çalabilirler.</p>
+            <hr border="0" style="border-top:1px solid #333">
+            <div style="padding:10px; background:#000; border-radius:8px; cursor:not-allowed">
+                <small>Bölüm 13</small><br><b>Mecnun'un Çilesi</b>
             </div>
         </div>
     </aside>
@@ -318,72 +252,38 @@
 
 <script>
     const video = document.getElementById('mainVideo');
-    const pWrapper = document.getElementById('pWrapper');
-    const playBtn = document.getElementById('playBtn');
-    const centralPlay = document.getElementById('centralPlay');
+    const playBtn = document.getElementById('atPlayBtn');
     const pFill = document.getElementById('pFill');
     const pContainer = document.getElementById('pContainer');
     const fsBtn = document.getElementById('fsBtn');
-    const muteBtn = document.getElementById('muteBtn');
-    const loader = document.getElementById('loader');
-    
-    // Altyazı Menü Elemanları
-    const subBtn = document.getElementById('subBtn');
-    const subMenu = document.getElementById('subMenu');
-    const optOff = document.getElementById('optOff');
-    const optEn = document.getElementById('optEn');
 
-    // 1. OYNAT / DURDUR
+    // OYNAT DURDUR (İkon Değişimi)
     function togglePlay() {
         if (video.paused) {
             video.play();
-            updateUI(true);
+            playBtn.innerText = 'pause_circle'; // Durdurma butonu
         } else {
             video.pause();
-            updateUI(false);
+            playBtn.innerText = 'pest_control_rodent'; // At/Kemirgen benzeri absürt ikon
         }
     }
 
-    function updateUI(playing) {
-        const icon = playing ? 'pause' : 'play_arrow';
-        playBtn.innerHTML = `<i class="material-icons-round">${icon}</i>`;
-        centralPlay.innerHTML = `<i class="material-icons-round">${icon}</i>`;
-        if(playing) {
-            centralPlay.parentElement.style.opacity = "0"; 
-        } else {
-            centralPlay.parentElement.style.opacity = "1";
-        }
-    }
-
-    playBtn.onclick = (e) => { e.stopPropagation(); togglePlay(); };
-    centralPlay.onclick = (e) => { e.stopPropagation(); togglePlay(); };
+    playBtn.onclick = togglePlay;
     video.onclick = togglePlay;
 
-    // 2. KLAVYE KONTROLLERİ (PC)
+    // KLAVYE KONTROLLERİ
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
-        if (e.code === 'ArrowRight') { e.preventDefault(); skip(5); }
-        if (e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); }
-        if (e.code === 'KeyF') { e.preventDefault(); toggleFullscreen(); }
-        if (e.code === 'KeyC') { e.preventDefault(); toggleSubtitle(); }
+        if (e.code === 'ArrowRight') video.currentTime += 5;
+        if (e.code === 'ArrowLeft') video.currentTime -= 5;
+        if (e.code === 'KeyF') toggleFullscreen();
     });
 
-    // 3. İLERİ / GERİ
-    function skip(val) {
-        video.currentTime += val;
-    }
-    document.getElementById('forward5').onclick = (e) => { e.stopPropagation(); skip(5); };
-    document.getElementById('rewind5').onclick = (e) => { e.stopPropagation(); skip(-5); };
-
-    // 4. PROGRESS BAR
+    // PROGRESS BAR
     video.ontimeupdate = () => {
         const pc = (video.currentTime / video.duration) * 100;
         pFill.style.width = pc + '%';
         document.getElementById('currTime').innerText = format(video.currentTime);
-    };
-
-    video.onloadedmetadata = () => {
-        document.getElementById('durTime').innerText = format(video.duration);
     };
 
     pContainer.onclick = (e) => {
@@ -392,54 +292,14 @@
         video.currentTime = pos * video.duration;
     };
 
-    // 5. TAM EKRAN MOTORU
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
-            if (pWrapper.requestFullscreen) pWrapper.requestFullscreen();
-            else if (pWrapper.webkitRequestFullscreen) pWrapper.webkitRequestFullscreen();
-            fsBtn.innerHTML = '<i class="material-icons-round">fullscreen_exit</i>';
+            document.getElementById('pWrapper').requestFullscreen();
         } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-            fsBtn.innerHTML = '<i class="material-icons-round">fullscreen</i>';
+            document.exitFullscreen();
         }
     }
-    fsBtn.onclick = (e) => { e.stopPropagation(); toggleFullscreen(); };
-
-    // 6. PROFESYONEL ALTYAZI MENÜ KONTROLÜ
-    subBtn.onclick = (e) => {
-        e.stopPropagation();
-        subMenu.classList.toggle('active');
-    };
-
-    function toggleSubtitle(mode) {
-        if (mode === 'off') {
-            video.textTracks[0].mode = 'disabled';
-            optOff.classList.add('selected');
-            optEn.classList.remove('selected');
-        } else {
-            video.textTracks[0].mode = 'showing';
-            optEn.classList.add('selected');
-            optOff.classList.remove('selected');
-        }
-        subMenu.classList.remove('active');
-    }
-
-    optOff.onclick = (e) => { e.stopPropagation(); toggleSubtitle('off'); };
-    optEn.onclick = (e) => { e.stopPropagation(); toggleSubtitle('en'); };
-
-    // Dışarı tıklayınca menüyü kapat
-    document.addEventListener('click', () => subMenu.classList.remove('active'));
-
-    // 7. YÜKLENİYOR
-    video.onwaiting = () => loader.style.display = 'block';
-    video.onplaying = () => loader.style.display = 'none';
-
-    // SES KONTROL
-    muteBtn.onclick = (e) => {
-        e.stopPropagation();
-        video.muted = !video.muted;
-        muteBtn.innerHTML = video.muted ? '<i class="material-icons-round">volume_off</i>' : '<i class="material-icons-round">volume_up</i>';
-    };
+    fsBtn.onclick = toggleFullscreen;
 
     function format(s) {
         let m = Math.floor(s/60);
